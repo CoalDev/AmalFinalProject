@@ -14,7 +14,6 @@ const int SD_CS = 4;
 #define ARDUINO_RX     5
 #define ARDUINO_TX     6
 
-/************ Command byte **************************/
 #define CMD_NEXT_SONG     0X01  // Play next song.
 #define CMD_PREV_SONG     0X02  // Play previous song.
 #define CMD_PLAY_W_INDEX  0X03
@@ -48,11 +47,7 @@ const int SD_CS = 4;
 #define CMD_QUERY_TOT_TRACKS  0x48
 #define CMD_QUERY_FLDR_COUNT  0x4f
 
-/************ Opitons **************************/
 #define DEV_TF            0X02
-
-
-/*********************************************************************/
 
 static int8_t Send_buf[8] = {0}; // Buffer for Send commands.  // BETTER LOCALLY
 static uint8_t ansbuf[10] = {0}; // Buffer for the answers.    // BETTER LOCALLY
@@ -108,8 +103,6 @@ void setup() {
   lcd.begin();
   lcdtouch.begin();
   lcdtouch.InitTypeTouch(2);
-  //lcd.setRotation(1);
-  //screen1();
   bmp::draw("screen1.bmp", 0, 0);
 
 }
@@ -139,19 +132,16 @@ void checkPress()
       if ((x > px) && (x < (px + w)) && (y > py) && (y < (py + h))) {
         player = 1;
         screen = 2;
-        //bmp::draw("screen2.bmp", 0, 0);
         startGame();
       }
       else if ((x > (px + w + dis)) && (x < (2 * w + dis)) && (y > py) && (y < (py + h))) {
         player = 2;
         screen = 2;
-        //bmp::draw("screen2.bmp", 0, 0);
         startGame();
       }
       else if ((x > (2 * dis + 2 * w)) && (x < (2 * dis + 3 * w)) && (y > py) && (y < (py + h))) {
         player = 3;
         screen = 2;
-        //bmp::draw("screen2.bmp", 0, 0);
         startGame();
       }
     }
@@ -160,7 +150,6 @@ void checkPress()
         sendCommand(CMD_PAUSE, 0);
         screen = 3;
         timerRun = false;
-        //delay(1000);
         bmp::draw("screen3.bmp", 0, 0);
         // stop timer && save
       }
@@ -184,74 +173,11 @@ void checkPress()
       }
       else if (x > 174 && x < 254 && y > 182 && y < 222) {
         screen = 2;
-        //        bmp::draw("screen2.bmp", 0, 0);
-        //        countDown(5);
         startGame();
       }
     }
   }
   String playerCheck = "Player: " + String(player) + " " + "Screen: " + String(screen);
-
-  //Serial.print(playerCheck);
-
-  //  if(screen == 3){
-  //
-  //  }
-
-  /*
-    if(player == 1){
-    //lcd.setColor(PURPLE);
-    //      lcd.setColor(BLACK);
-    //      lcd.setFont(1);
-    //      lcd.gotoxy(70,130);
-    //      lcd.print(t);
-    UpdateRecord();
-
-    if(minutes<10)
-     score+="0";
-    score+=String(minutes)+":";
-    if(seconds < 10)
-     t+="0";
-    score+=String(seconds);
-
-    }
-
-    if(player == 2){
-    //lcd.setColor(BLUE);
-    //      lcd.setColor(BLACK);
-    //      lcd.setFont(1);
-    //      lcd.gotoxy(147,130);
-    //      lcd.print(t);
-    UpdateRecord();
-
-
-    if(minutes<10)
-     score+="0";
-    score+=String(minutes)+":";
-    if(seconds < 10)
-     t+="0";
-    score+=String(seconds);
-    UpdateRecord();
-
-
-    }
-    if(player == 3){
-    //lcd.setColor(RED);
-    //      lcd.setColor(BLACK);
-    //      lcd.setFont(1);
-    //      lcd.gotoxy(224,130);
-    //      lcd.print(t);
-
-
-
-    if(minutes<10)
-     score+="0";
-    score+=String(minutes)+":";
-    if(seconds < 10)
-     t+="0";
-    score+=String(seconds);
-    }
-    }*/
 }
 
 
@@ -265,13 +191,6 @@ void timer() {
   if (seconds < 10)
     t += "0";
   t += String(seconds);
-  //  if(player == 1){
-  //    lcd.setColor(PURPLE);
-  //  }else if(player == 2){
-  //    lcd.setColor(BLUE);         // Color depends on the player(1,2,3);
-  //  }else if(player == 3){
-  //    lcd.setColor(RED);
-  //  }
   lcd.setColor(BLACK);
   lcd.print(t);
 }
@@ -279,15 +198,6 @@ void timer() {
 
 
 void countDown(int num) {
-
-  //  if(player == 1){
-  //    lcd.setColor(PURPLE);
-  //  }else if(player == 2){
-  //    lcd.setColor(BLUE);         // Color depends on the player(1,2,3);
-  //  }else if(player == 3){
-  //    lcd.setColor(RED);
-  //  }
-
   lcd.setColor(BLACK);
 
   lcd.setFont(7);
@@ -298,14 +208,6 @@ void countDown(int num) {
   }
   lcd.gotoxy(140, 70);
   lcd.print(" ");
-}
-
-
-
-void displayScore() {
-
-
-
 }
 
 void startGame() {
@@ -341,27 +243,10 @@ void startGame() {
 }
 
 void UpdateRecord() {
-  //  if((minutes * 60 + seconds) < (EEPROM.read(2*player-1)*60+EEPROM.read(2*player)))
-  //  {
-  //    EEPROM.write(2*player-1,minutes);
-  //    EEPROM.write(2*player,seconds);
-  //     // Set color of score depending if the score was broken
-  //  } else{
-  //     // Set color of score depending if the score wasn't broken
-  //  }
-
   t = "";
   p1 = "";
   p2 = "";
   p3 = "";
-  /*
-    if(EEPROM.read(2*player-1)<10)
-    t+="0";
-    t+=String(EEPROM.read(2*player-1))+":";
-    if(EEPROM.read(2*player) < 10)
-    t+="0";
-    t+=String(EEPROM.read(2*player));
-  */
   if (player == 1) {
 
 
@@ -489,7 +374,6 @@ void UpdateRecord() {
     if (EEPROM.read(3) < 59 && EEPROM.read(4) < 59) {
       lcd.print(p2);
     }
-
 
     if ((minutes * 60 + seconds) < (EEPROM.read(2 * player - 1) * 60 + EEPROM.read(2 * player)))
     {
@@ -517,18 +401,8 @@ void UpdateRecord() {
     if (EEPROM.read(5) < 59 && EEPROM.read(6) < 59) {
       lcd.print(p3);
     }
-
-
-
   }
-
 }
-
-
-void printRecords(int player) {
-
-}
-
 
 void ColorFlash(int player) {
   if (player == 1) {
@@ -540,8 +414,6 @@ void ColorFlash(int player) {
   }
 }
 
-
-
 void Color(int r, int g, int b) {
   for (int i = 0; i < NUMPIXELS; i++) {
     pixels.setPixelColor(i, pixels.Color(r, g, b));
@@ -549,7 +421,6 @@ void Color(int r, int g, int b) {
   }
   delay(delayval);
 }
-
 
 void ColorBR(bool check) {
   if (check) {
@@ -699,13 +570,6 @@ void sendMP3Command(char c) {
   }
 }
 
-
-
-/********************************************************************************/
-/*Function decodeMP3Answer: Decode MP3 answer.                                  */
-/*Parameter:-void                                                               */
-/*Return: The                                                  */
-
 String decodeMP3Answer() {
   String decodedMP3Answer = "";
 
@@ -752,16 +616,6 @@ String decodeMP3Answer() {
   return decodedMP3Answer;
 }
 
-
-
-
-
-
-/********************************************************************************/
-/*Function: Send command to the MP3                                         */
-/*Parameter:-int8_t command                                                     */
-/*Parameter:-int16_ dat  parameter for the command                              */
-
 void sendCommand(int8_t command, int16_t dat)
 {
   delay(20);
@@ -782,14 +636,6 @@ void sendCommand(int8_t command, int16_t dat)
   Serial.println();
 }
 
-
-
-/********************************************************************************/
-/*Function: sbyte2hex. Returns a byte data in HEX format.                 */
-/*Parameter:- uint8_t b. Byte to convert to HEX.                                */
-/*Return: String                                                                */
-
-
 String sbyte2hex(uint8_t b)
 {
   String shex;
@@ -801,14 +647,6 @@ String sbyte2hex(uint8_t b)
   shex += " ";
   return shex;
 }
-
-
-
-
-/********************************************************************************/
-/*Function: sanswer. Returns a String answer from mp3 UART module.          */
-/*Parameter:- uint8_t b. void.                                                  */
-/*Return: String. If the answer is well formated answer.                        */
 
 String sanswer(void)
 {
@@ -834,11 +672,8 @@ String sanswer(void)
   return "???: " + mp3answer;
 }
 
-//void screen1(){
-//  lcd.fillRoundRect(px+2*dis+2*w,py,w,h,5,RED);
-//  lcd.fillRoundRect(px+dis+w,py,w,h,5,CYAN);
-//  lcd.fillRoundRect(px,py,w,h,5,PURPLE);
-//}
+
+
 
 
 
